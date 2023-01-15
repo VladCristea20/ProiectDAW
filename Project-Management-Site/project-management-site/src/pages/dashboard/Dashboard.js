@@ -10,15 +10,15 @@ import ProjectFilter from './ProjectFilter'
 import './Dashboard.css'
 
 export default function Dashboard() {
-  const { user } = useAuthContext()
-  const { documents, error } = useCollection('projects')
+  const { user } = useAuthContext()//cookie legat de utilizatorul curent
+  const { documents, error } = useCollection('projects')//request de get la proiecte
   const [filter, setFilter] = useState('all')
 
   const changeFilter = (newFilter) => {
-    setFilter(newFilter)
+    setFilter(newFilter)//aici se updateaza state-ul de filter dupa care se filtreaza array-ul de mai jos
   }
   
-  const projects = documents ? documents.filter(document => {
+  const projects = documents ? documents.filter(document => {//proiectele se pot filtra dupa preferintele utilizatorului
     switch(filter) {
       case 'all':
         return true
@@ -34,7 +34,6 @@ export default function Dashboard() {
       case 'design':
       case 'sales':
       case 'marketing':
-        console.log(document.category, filter)
         return document.category === filter
       default:
         return true
@@ -45,7 +44,7 @@ export default function Dashboard() {
     <div>
       <h2 className="page-title">Dashboard</h2>
       {error && <p className="error">{error}</p>}
-      {documents && <ProjectFilter changeFilter={changeFilter} />}
+      {documents && <ProjectFilter changeFilter={changeFilter} />}{/**metoda de changeFilter va fi apelata in componenta de Project filter si aceasta va da un argument care va conta la switch-ul de mai sus */}
       {projects && <ProjectList projects={projects} />}
     </div>
   )

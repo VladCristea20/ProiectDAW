@@ -6,19 +6,19 @@ import ProjectSummary from './ProjectSummary';
 
 export default function Project() {
   const {id}= useParams();
-  const {error,document}=useDocument("projects",id);
+  const {error,document}=useDocument("projects",id);//request de get pentru documentul pe care a apasat utilizatorul
   if(error)
   {
-    return <div className="error">{error}</div>
+    return <div className="error">{error}</div> //logica pentru cand nu s-a putut efectua requestul de get
   }
   if(!document)
   {
-    return <div className="loading">Loading...</div>
+    return <div className="loading">Loading...</div>//logica pentru cat timp se efectueaza requestul de get
   }
   return (
     <div className="project-details">
-      <ProjectSummary project={document}/>
-      <ProjectComments project={document}/>
+      <ProjectSummary project={document}/>{/**Componenta pentru descrierea proiectului */}
+      <ProjectComments project={document}/>{/**Componenta pentru comentariile adaugate proiectului */}
     </div>
   )
 }

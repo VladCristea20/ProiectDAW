@@ -13,7 +13,7 @@ export const useSignup = () => {
         setIsPending(true);
 
         try{
-            ///signup user
+            ///inregistrez un utilizator in baza de date
             const response=await projectAuth.createUserWithEmailAndPassword(email,password);
 
             if(!response)
@@ -21,15 +21,15 @@ export const useSignup = () => {
                 throw new Error("Could not complete signup");
             }
 
-            //upload user thumbnail
+            //adaug fotografia aleasa de utilizator in cloud
             const uploadPath=`thumbnails/${response.user.uid}/${thumbnail.name}`;
             const image=await projectStorage.ref(uploadPath).put(thumbnail);
             const imageUrl=await image.ref.getDownloadURL();
 
-            ///add username to user
+            ///updatez informatiile userului ce doresc sa il creez
             await response.user.updateProfile({displayName:username,photoURL:imageUrl})
 
-            //create a user document
+            //adaug obiectul creat in baza de date
             await projectFirestore.collection("users").doc(response.user.uid).set({
                 online:true,
                 username,
@@ -37,7 +37,7 @@ export const useSignup = () => {
             })
 
 
-            //dispatch login function
+            //inregistrez informatiile userului intr-un cookie
             dispatch({type:"LOGIN",payload:response.user})
             if(!isCancelled)
             {
@@ -50,7 +50,7 @@ export const useSignup = () => {
             if(!isCancelled)
             {
             console.log(err.message);
-            setError(err.message);
+            setError(err.message);//tratarea de exceptii
             setIsPending(false);
             }
         }
@@ -61,6 +61,6 @@ export const useSignup = () => {
         return ()=>setIsCancelled(true);
     },[])
 
-    return {error,isPending,signup}
+    return {error,isPending,signup}//date ce vor fi deserializate
 
 }

@@ -2,13 +2,13 @@ import { useReducer, useEffect, useState } from "react";
 import { projectFirestore, timestamp } from '../firebase/config';
 let initialState = {
     document: null,
-    isPending: false,
+    isPending: false,//cookie ce retine date legate de document
     error: null,
     success: null
 }
-// console.log("initial state",initialState);
+
 const firestoreReducer = (state, action) => {
-    switch (action.type) {
+    switch (action.type) {///modifica valorile cookie-ului
         case "IS_PENDING":
             return { isPending: true, document: null, success: false, error: null }
         case "ADDED_DOCUMENT":
@@ -25,33 +25,32 @@ const firestoreReducer = (state, action) => {
 }
 
 export const useFirestore = (collection) => {
-    const [response, dispatch] = useReducer(firestoreReducer, initialState);
+    const [response, dispatch] = useReducer(firestoreReducer, initialState);//in state-ul de response se updateaza cookie-ul cu ajutorul functiei de dispatch
     const [isCancelled, setIsCancelled] = useState(false);
 
-    //collection ref
+    //fetch la endpoint dat prin argument
     const ref = projectFirestore.collection(collection);
 
-    //only dispatch if not cancelled
+    //verifica daca utilizatorul a navigat de pe pagina
     const dispatchIfNotCancelled = (action) => {
         if (!isCancelled) {
-            dispatch(action);
+            dispatch(action);///functia de dispatch face apel la functia firestoreReducer ce modifica cookie-ul de mai sus
         }
     }
 
-    //add a document
+    //adaug un document in baza ded ate
     const addDocument = async (doc) => {
         dispatch({ type: "IS_PENDING" });
-        // console.log("Pending state",initialState);
+        //logica pentru a evita spam-ul la requestul de post
         try {
             const createdAt = timestamp.fromDate(new Date());
             const addedDocument = await ref.add({ ...doc, createdAt });
-            dispatchIfNotCancelled({ type: "ADDED_DOCUMENT", payload: addedDocument });
+            dispatchIfNotCancelled({ type: "ADDED_DOCUMENT", payload: addedDocument });///pasez un obiect ca si argument cu proprietati in funtia dispatchIfNotCancelled si o apelez
         }
         catch (error) {
             dispatchIfNotCancelled({ type: "ERROR", payload: error.message })
         }
     }
-    // console.log("modified initial state",initialState);
 
     const deleteDocument = async (id) => {
         dispatch({ type: "IS_PENDING" });
@@ -62,7 +61,7 @@ export const useFirestore = (collection) => {
             dispatchIfNotCancelled({ type: "ERROR", payload: "COULD NOT DELETE THE DOCUMENT" });
         }
     }
-    // update a document
+    
     const updateDocument = async (id, updates) => {
         dispatch({ type: "IS_PENDING" })
 
@@ -78,7 +77,7 @@ export const useFirestore = (collection) => {
     }
     useEffect(() => {
         setIsCancelled(false);
-        return () => setIsCancelled(true);
+        return () => setIsCancelled(true);//logica pentru cand utilizatorul navigheaza de pe pagina unde se face fetch-ul
     }, [])
 
     return { addDocument, deleteDocument, updateDocument, response }

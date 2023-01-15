@@ -12,17 +12,15 @@ export const useLogout=()=>{
 
         try{
 
-            //update online status
-
             const {uid}=user;
             await projectFirestore.collection("users").doc(uid).update({online:false});
 
             await projectAuth.signOut();
 
-            //dispatch logout action
+            //sterg informatiile din cookie-ul utilizatorului ce a fost logat pana cand a apasat pe butonul de logout
             dispatch({type:"LOGOUT"});
 
-            //update state
+            
             if(!isCancelled)
             {
                 setIsPending(false);
@@ -40,7 +38,7 @@ export const useLogout=()=>{
     }
     useEffect(()=>{
         setIsCancelled(false);
-        return ()=>setIsCancelled(true);
+        return ()=>setIsCancelled(true);//logica pentru cand utilizatorul navigheaza de pe pagina in mijlocului unui fetch de date
     },[])
     return {logout,error,isPending}
 }

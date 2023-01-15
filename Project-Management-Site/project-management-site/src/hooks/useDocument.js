@@ -5,12 +5,11 @@ export const useDocument = (collection, id) => {
   const [document, setDocument] = useState(null)
   const [error, setError] = useState(null)
 
-  // realtime document data
+  // logica pentru fetch la document dupa id(cand dau click pe un proiect)
   useEffect(() => {
     const ref = projectFirestore.collection(collection).doc(id)
 
     const unsubscribe = ref.onSnapshot(snapshot => {
-      // need to make sure the doc exists & has data
       if(snapshot.data()) {
         setDocument({...snapshot.data(), id: snapshot.id})
         setError(null)
@@ -23,7 +22,7 @@ export const useDocument = (collection, id) => {
       setError('failed to get document')
     })
 
-    // unsubscribe on unmount
+    // logica pentru cand se navigheaza de pe pagina curenta
     return () => unsubscribe()
 
   }, [collection, id])

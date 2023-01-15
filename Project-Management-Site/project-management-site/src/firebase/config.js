@@ -12,15 +12,15 @@ const firebaseConfig = {
     appId: "1:711693426596:web:9693ac769991c799c7eb31"
   };
 
-  //init firebase
+  //initializez conectiunea la firebase
   firebase.initializeApp(firebaseConfig);
 
-  //init services
+  //initializez serviciile pe care le voi folosi(autentificare,cloud si baza de date)
   const projectFirestore = firebase.firestore();
   const projectAuth=firebase.auth();
   const projectStorage=firebase.storage();
 
-  //timestamp
+  //Obiect ce se ocupa cu convertirea milisecundelor intr-un format de month/day/year
   const timestamp=firebase.firestore.Timestamp;
 
   export {projectAuth,projectFirestore,projectStorage,timestamp}

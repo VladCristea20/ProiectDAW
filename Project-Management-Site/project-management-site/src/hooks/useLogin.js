@@ -14,7 +14,7 @@ export const useLogin=()=>{
             const response=await projectAuth.signInWithEmailAndPassword(email,password);
             await projectFirestore.collection("users").doc(response.user.uid).update({online:true});
 
-            //dispatch logout action
+            //updatez cookie-ul ce retine informatii legate de utilizatorul ce incearca sa isi dea login
             dispatch({type:"LOGIN",payload:response.user});
 
             //update state
@@ -33,11 +33,11 @@ export const useLogin=()=>{
             }
         }
     }
-    // setIsCancelled(false);
+
     useEffect(()=>{
         setIsCancelled(false);
-        return ()=>setIsCancelled(true);//return only fires when component is unmounted
+        return ()=>setIsCancelled(true);//logica pentru cand utilizatorul navigheaza de pe pagina in mijlocul requestului de login
     },[])
-    // console.log(isPending);
-    return {login,error,isPending}
+
+    return {login,error,isPending}//date ce vor fi deserializate
 }

@@ -7,7 +7,7 @@ export default function ProjectFilter({ changeFilter }) {
 
   const handleClick = (newFilter) => {
     setCurrentFilter(newFilter)
-    changeFilter(newFilter)
+    changeFilter(newFilter)//aici este apelata metoda de changeFilter din componenta Dashboard
   }
 
   return (
@@ -17,7 +17,7 @@ export default function ProjectFilter({ changeFilter }) {
         {filterList.map((f) => (
           <button key={f}
             onClick={() => handleClick(f)}
-            className={currentFilter === f ? 'active' : ''}
+            className={currentFilter === f ? 'active' : ''}//daca filtrul curent are valoarea egala cu cea la care a ajuns functia de map(iterator) atunci ii aplica clasa "active" ce ii aplica buttonului culoarea mov
           >{f}</button>
         ))}
       </nav>
